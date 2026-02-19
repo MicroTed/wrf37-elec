@@ -1,7 +1,7 @@
  &time_control
  run_days                            = 0,
  run_hours                           = 0,
- run_minutes                         = 60,
+ run_minutes                         =  60, ! 120,
  run_seconds                         = 0,
  start_year                          = 0001, 0001, 0001,
  start_month                         = 01,   01,   01,
@@ -13,36 +13,33 @@
  end_month                           = 01,   01,   01,
  end_day                             = 01,   01,   01,
  end_hour                            = 00,   00,   00,
- end_minute                          = 120,  120,  120,
+ end_minute                          =  60,  120,  120,
  end_second                          = 00,   00,   00,
- history_interval                    = 2,   10,   10,
+ history_interval                    = 5,   10,   10,
  frames_per_outfile                  = 1000, 1000, 1000,
- ! restart                             = .true.,
  restart                             = .false.,
- restart_interval                    =   115,
+ restart_interval                    = 1200,
  io_form_history                     = 2
  io_form_restart                     = 2
  io_form_input                       = 2
  io_form_boundary                    = 2
  debug_level                         = 0
-! override_restart_timers = .true.
- iofields_filename                   = "forecast_vars_d01.txt"
  /
 
  &domains
- time_step                           =  4,
+ time_step                           =  6,
  time_step_fract_num                 = 0,
  time_step_fract_den                 = 1,
  max_dom                             = 1,
  s_we                                = 1,     1,     1,
- e_we                                =  81,   43,    43,
+ e_we                                = 42,    43,    43,
  s_sn                                = 1,     1,     1,
- e_sn                                =  61,   43,    43,
+ e_sn                                = 42,    43,    43,
  s_vert                              = 1,     1,     1,
  e_vert                              = 61,    41,    41,
- dx                                  =  500,  666.6666667, 222.2222222
- dy                                  =  500,  666.6666667, 222.2222222
- ztop                                = 24000, 20000, 20000,
+ dx                                  = 2000,  666.6666667, 222.2222222
+ dy                                  = 2000,  666.6666667, 222.2222222
+ ztop                                = 20000, 20000, 20000,
  grid_id                             = 1,     2,     3,
  parent_id                           = 0,     1,     2,
  i_parent_start                      = 0,     15,    15,
@@ -54,21 +51,15 @@
  /
 
  &physics
- NUM_LAND_CAT = 21,
  mp_physics                          = 18,     1,     1,
-! sbm_diagnostics = 1,
  elec_physics                        = 1,
-! sbm_elec                            = 1,
- nssl_ipelec                         = 3,
- nssl_cccn                           = 0.8e9,
- nssl_isaund                         = 13, ! 1,
+ nssl_ccn_is_ccna                    = 1,
+ nssl_ipelec                         = 2,
+ nssl_cccn                           = 0.9e9,
+ nssl_isaund                         = 13,
  nssl_iscreen                        = 1,
  nssl_idischarge                     = 1,
  nssl_ibrkd                          = 4,
- NSSL_LIGHTRAD                       = 6000.,
-! dust_emis                           = 1,
-! sbm_dust_calculations = 1, 1,
-! num_dust_src_bins = 5
  ra_lw_physics                       = 0,     0,     0,
  ra_sw_physics                       = 0,     0,     0,
  radt                                = 30,    30,    30,
@@ -85,7 +76,6 @@
  /
 
  &dynamics
- ! hybrid_opt                          = 0, 
  rk_ord                              = 3,
  diff_opt                            = 2,      2,      2,
  km_opt                              = 2,      2,      2,
@@ -104,9 +94,8 @@
  v_sca_adv_order                     = 3,      3,      3,
  moist_adv_opt                       = 4,      1,      1,     
  scalar_adv_opt                      = 3,      1,      1,     
- tracer_adv_opt                      = 3,      1,      1,     
- chem_adv_opt                        = 3,      1,      1,     
- tke_adv_opt                         = 3,      1,      1,     
+ chem_adv_opt                        = 1,      1,      1,     
+ tke_adv_opt                         = 1,      1,      1,     
  non_hydrostatic                     = .true., .true., .true.,
  mix_full_fields                     = .true., .true., .true.,
  /
@@ -134,31 +123,25 @@
  /
 
 &nssl_mp_params
-  nonigrd = 0
-  restoreccn = .true.
-  icdx   = 6,
-  icdxhl = 6,
-  ehw0  = 0.9,
-  ehlw0 = 0.9,
-  snowfallfac = 1.25,
-  icefallfac = 1.5,
-  ehimin = 0.0
-  ehs0   = 0.0
+  ehw0 = 0.5,
+  ehlw0 = 0.75,
+  iqvsopt = 0,
 /
 
-! bubbltype =2 adds random perturbations (up to 0.1K) to the thermal bubble; 
-! the random number seed can be changed with ibbleseed (any value except zero)
 &init_ideal
- USE_SND_ZLEVELS = .true.,
- ugrid = 4.0,
- vgrid = -1.0,
+ config_stretch_z = 1,
+ dz_bot = 100.,
+ dz_top = 500.,
+ nbndlyr = 5,
+! USE_SND_ZLEVELS = .true.,
+! ugrid = 4.0,
+! vgrid = -1.0,
  delt = 1.5,
- nxc = 44,
- nyc = 30,
+! nxc = 44,
+! nyc = 30,
  xradbub = 7000.,
  yradbub = 7000.,
  zradbub = 1400.,
  bubbletype = 2,
- ! ibbleseed = 1,
 /
 

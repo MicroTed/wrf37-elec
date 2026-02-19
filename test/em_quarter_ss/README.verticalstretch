@@ -1,0 +1,17 @@
+Geometric vertical stretch with ideal.exe
+
+config_stretch_z : set to 1 to turn on (default is 0)
+dz_bot : dz for k=1 (meters) default 200.
+dz_top : maximum dz at top of domain. default 500.
+nbndlyr : number of layers at bottom using dz_bot (default 0). E.g., if nbndlyr = 10, then the first 10 levels will have constant dz = dz_bot and then stretch above that.
+
+Domain height is set by the ztop in the domains namelist.
+
+Stretching will fail if the stretch factor is 1.1 or greater. An error message will print. Either increase the number of levels  nz (i.e., e_vert) or adjust dz_bot and dz_top until it succeeds. The 1.1 limit is used to reduce numerical errors in advection that result from a local assumption that dz is constant.
+
+&init_ideal
+ config_stretch_z = 1,               
+ dz_bot = 100.,                      
+ dz_top = 500.,
+ nbndlyr = 0,
+/

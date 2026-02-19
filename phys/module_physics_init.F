@@ -999,14 +999,20 @@ integer myproc
    IF ( f_qnn ) THEN
 ! Initialize simple ccn field
      IF ( qnn_curr((ite+itf)/2,(kte+ktf)/2,(jte+jtf)/2) < 1.0 ) THEN ! initialize ccn if not already done
+          IF ( config_flags%mp_physics == nssl_2momccn ) THEN
+            IF ( config_flags%nssl_ccn_is_ccna == 0 ) THEN
+              ccn_conc =  config_flags%nssl_cccn/1.225
+            ELSE
+              ccn_conc = 0
+            ENDIF
+          ENDIF
        DO j=jts,jtf
          DO k=kts,ktf
           DO i=its,itf
            IF ( config_flags%mp_physics == wdm5scheme .or. config_flags%mp_physics == wdm6scheme ) THEN
              qnn_curr(i,k,j) = ccn_conc
            ELSEIF ( config_flags%mp_physics == nssl_2momccn ) THEN
-             qnn_curr(i,k,j) = nssl_cccn/1.225
-             ccn_conc =  nssl_cccn/1.225
+             qnn_curr(i,k,j) = ccn_conc
            ELSE
              qnn_curr(i,k,j) = ccn_conc
            ENDIF
@@ -3627,6 +3633,9 @@ CALL lsm_mosaic_init(IVGTYP,config_flags%ISWATER,config_flags%ISURBAN,config_fla
          nssl_ipelec_tmp = Max(1,nssl_ipelec)
        ELSE
          nssl_ipelec_tmp = 0.0
+       ENDIF
+       IF ( config_flags%nssl_ccn_is_ccna /= 0 ) THEN
+         nssl_params(13) = 1
        ENDIF
      CASE DEFAULT
        nssl_ipelec_tmp = 0.0
