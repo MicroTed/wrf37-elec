@@ -511,6 +511,8 @@ CONTAINS
          ke = nz1
          gze(ke+1) = gze(ke) + (gze(ke) - gze(ke-1))
      
+       dry_sounding = .true.
+       etal(:) = 0.0
        CALL get_sounding( zk, p_in, pd_in, theta, rho, u, v, qv, etal, dry_sounding, nl_max, nl_in, theta_surf)
      
      grid%znw(1) = 1.0
@@ -521,7 +523,7 @@ CONTAINS
       tmp1 = gze(k)
       etaltmp(k) = interp_0( etal, zk, tmp1, nl_in )
       p_z(k) = interp_0( p_in, zk, tmp1, nl_in )
-      write(6,*) 'k,z,etaltmp,zk,p: ',k,tmp1,etaltmp(k),zk(k),tmp2
+      write(6,*) 'k,z,etaltmp,zk,p: ',k,tmp1,etaltmp(k),zk(k),tmp2,p_z(k)
      ENDDO
 
      p_z(kde) = interp_0( p_in, zk, config_flags%ztop, nl_in )
@@ -544,7 +546,7 @@ CONTAINS
    ELSE
 
     IF ( use_snd_plevels .or. use_snd_zlevels ) THEN
-    dry_sounding = .false.
+    dry_sounding = .true.
     CALL get_sounding( zk, p_in, pd_in, theta, rho, u, v, qv, etal, dry_sounding, nl_max, nl_in, theta_surf )
      grid%znw(1) = 1.0
      write(6,*) 'eta levels:'
@@ -615,6 +617,7 @@ CONTAINS
   CALL wrf_dm_bcast_real( u , nl_max )
   CALL wrf_dm_bcast_real( v , nl_max )
   CALL wrf_dm_bcast_real( qv , nl_max )
+  CALL wrf_dm_bcast_real( etal , nl_max )
   CALL wrf_dm_bcast_integer ( nl_in , 1 ) 
 
   write(6,*) ' returned from reading sounding, nl_in is ',nl_in
